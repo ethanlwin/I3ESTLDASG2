@@ -10,6 +10,8 @@ public class Gun : MonoBehaviour
 
     float timeSinceLastShot;
 
+    public GameObject muzzleFlash;
+    public Transform muzzle;
 
     private void Start()
     {
@@ -28,7 +30,8 @@ public class Gun : MonoBehaviour
 
     private void OnGunShot()
     {
-//throw new NotImplementedException();
+        GameObject Flash = Instantiate(muzzleFlash, muzzle);
+        Destroy(Flash, 0.1f);
     }
 
 
@@ -71,7 +74,7 @@ public class Gun : MonoBehaviour
 
                 gunData.currentAmmo--;
                 timeSinceLastShot = 0;
-                //OnGunShot();
+                OnGunShot();
             }
         }
     }
