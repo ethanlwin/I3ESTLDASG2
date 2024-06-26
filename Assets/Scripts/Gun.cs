@@ -1,17 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Gun : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private GunData gunData;
     [SerializeField] private Transform cam;
+    [SerializeField] float shakeIntensity;
+    [SerializeField] float shakeFrequency;
+    [SerializeField] float shakeTimer;
 
+
+    [Header("Audio")]
+    [SerializeField] private AudioClip shot;
+    [SerializeField] private AudioClip reload;
+    [SerializeField] private AudioClip emptyShot;
+
+    [Header("UI")]
+    public TextMeshProUGUI ammoText;
     float timeSinceLastShot;
 
-    public GameObject muzzleFlash;
+    [HideInInspector]
+    private float shakeTimerStart;
+
+    //public GameObject muzzleFlash;
     public Transform muzzle;
+    public ParticleSystem muzzleFlash;
 
     private void Start()
     {
@@ -24,18 +40,35 @@ public class Gun : MonoBehaviour
 
         Debug.DrawRay(cam.position, cam.forward);
 
+        ammoText.text = $"{gunData.currentAmmo.ToString()}/{gunData.maxAmmo.ToString()}";
+
+        if(shakeTimerStart > 0)
+        {
+            shakeTimerStart -= Time.deltaTime;
+            if(shakeTimerStart <= 0f)
+            {
+                GameManager.Instance.ShakeCamera(0f, 0f);
+            }
+        }
     }
 
     private bool CanShoot() => !gunData.reloading && timeSinceLastShot > 1f / (gunData.fireRate / 60f);
 
     private void OnGunShot()
     {
-        GameObject Flash = Instantiate(muzzleFlash, muzzle);
-        Destroy(Flash, 0.1f);
+        muzzleFlash.Play();
+        //GameObject Flash = Instantiate(muzzleFlash, muzzle);
+        //Destroy(Flash, 0.1f);
+        AudioSource.PlayClipAtPoint(shot, muzzle.position, 1f);
+
+        GameManager.Instance.ShakeCamera(shakeIntensity, shakeFrequency);
     }
 
 
-    private void OnDisable() => gunData.reloading = false;
+    private void OnDisable()
+    {
+       gunData.reloading = false;
+    }
    
     /// <summary>
     /// to reload the gun
@@ -45,6 +78,7 @@ public class Gun : MonoBehaviour
         if (!gunData.reloading && this.gameObject.activeSelf)
         {
             StartCoroutine(Reload());
+            AudioSource.PlayClipAtPoint(reload, transform.position, 1.5f);
         }
     }
 
@@ -75,6 +109,15 @@ public class Gun : MonoBehaviour
                 gunData.currentAmmo--;
                 timeSinceLastShot = 0;
                 OnGunShot();
+            }
+
+        }
+        else
+        {
+            if(CanShoot())
+            {
+                AudioSource.PlayClipAtPoint(emptyShot, muzzle.position, 1f);
+                timeSinceLastShot = 0;
             }
         }
     }

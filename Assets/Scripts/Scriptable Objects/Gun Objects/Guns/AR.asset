@@ -15,7 +15,8 @@ MonoBehaviour:
   name: Assult Rifle
   damage: 30
   maxDistance: 200
-  currentAmmo: 0
+  maxAmmo: 31
+  currentAmmo: 31
   magSize: 31
   fireRate: 600
   reloadTime: 1.5

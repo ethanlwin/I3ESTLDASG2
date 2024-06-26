@@ -17,6 +17,8 @@ public class GunData : ScriptableObject
     public float maxDistance;
 
     [Header("Reloading")]
+    //Max ammo of the gun//
+    public int maxAmmo;
     //current amount of ammo in the gun//
     public int currentAmmo;
     //how much ammo the gun can hold//
