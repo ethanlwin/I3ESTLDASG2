@@ -9,6 +9,8 @@ public class PlayerShoot : MonoBehaviour
     public static Action shootInput;
     public static Action reloadInput;
 
+    bool holdDownShoot;
+
     [SerializeField] private KeyCode reloadKey;
 
     private void Update()

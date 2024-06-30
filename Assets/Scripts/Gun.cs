@@ -31,6 +31,7 @@ public class Gun : MonoBehaviour
 
     private void Start()
     {
+        gunData.currentAmmo = gunData.maxAmmo;
         PlayerShoot.shootInput += Shoot;
         PlayerShoot.reloadInput += StartReload;
     }
@@ -41,15 +42,6 @@ public class Gun : MonoBehaviour
         Debug.DrawRay(cam.position, cam.forward);
 
         ammoText.text = $"{gunData.currentAmmo.ToString()}/{gunData.maxAmmo.ToString()}";
-
-        if(shakeTimerStart > 0)
-        {
-            shakeTimerStart -= Time.deltaTime;
-            if(shakeTimerStart <= 0f)
-            {
-                GameManager.Instance.ShakeCamera(0f, 0f);
-            }
-        }
     }
 
     private bool CanShoot() => !gunData.reloading && timeSinceLastShot > 1f / (gunData.fireRate / 60f);
@@ -61,7 +53,6 @@ public class Gun : MonoBehaviour
         //Destroy(Flash, 0.1f);
         AudioSource.PlayClipAtPoint(shot, muzzle.position, 1f);
 
-        GameManager.Instance.ShakeCamera(shakeIntensity, shakeFrequency);
     }
 
 

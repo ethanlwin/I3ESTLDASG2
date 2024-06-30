@@ -9,6 +9,18 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 7947b2cfb6b03bf49a706c5e1fe66dbb
   - enabled: 1
+    path: Assets/Scenes/Ship.unity
+    guid: 81d076847a58f6345af1346b7961ee17
+  - enabled: 1
     path: Assets/Scenes/MainScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/BuildingResi.unity
+    guid: 8abc047a23228d54eaec84fdd5a34b72
+  - enabled: 1
+    path: Assets/Scenes/CraftWarehouse.unity
+    guid: 4e17e54d6897b68489daa59007af642a
+  - enabled: 1
+    path: Assets/Scenes/BossWarehouse.unity
+    guid: 742a3b07e569ea446a5a1344c9a66966
   m_configObjects: {}

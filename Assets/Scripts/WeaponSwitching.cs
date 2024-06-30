@@ -1,69 +1,71 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class WeaponSwitching : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] private Transform[] weapons;
+    [Header("Weapons")]
+    [SerializeField] GameObject primaryWeapon;
+    [SerializeField] GameObject secondaryWeapon;
 
-    [Header("Keys")]
-    [SerializeField] private KeyCode[] keys;
+    [Header("UI")]
+    public GameObject ammoPrimaryText;
+    public GameObject ammoSecondaryText;
+    public GameObject ammoIcon;
 
-    [Header("Settings")]
-    [SerializeField] private float switchTime;
+    [Header("Audio")]
+    [SerializeField] private AudioClip switchSound;
 
-    private int selectedWeapon;
-    private float timeSinceLastSwitch;
+    [HideInInspector]
+    public bool primaryWeaponEQ;
+    public bool secondaryWeaponEQ;
+    public bool primaryWeaponFound;
+    public bool secondaryWeaponFound;
 
-    private void Start()
+    public void Start()
     {
-        SetWeapons();
-        Select(selectedWeapon);
-
-        timeSinceLastSwitch = 0f;
-           
+        primaryWeapon.SetActive(false);
+        secondaryWeapon.SetActive(false);
+        ammoPrimaryText.SetActive(false);
+        ammoSecondaryText.SetActive(false);
+        ammoIcon.SetActive(false);
+        primaryWeaponEQ = false;
+        secondaryWeaponEQ = false;
     }
-    private void Update()
+    public void Update()
     {
-        int previousSelectedWeapon = selectedWeapon;
-
-        for(int i = 0; i < keys.Length; i++)
+        if(primaryWeaponEQ || secondaryWeaponEQ)
         {
-            if (Input.GetKeyDown(keys[i]) && timeSinceLastSwitch >= switchTime)
-                selectedWeapon = i;
+            ammoIcon.SetActive(true);
         }
-
-        if(previousSelectedWeapon != selectedWeapon) 
-            Select(selectedWeapon);
-
-        timeSinceLastSwitch += Time.deltaTime;
     }
 
-    private void SetWeapons()
+    void OnPrimary()
     {
-        weapons = new Transform[transform.childCount];
-
-        for (int i = 0; i < transform.childCount; i++)
+        if (primaryWeaponFound && !primaryWeaponEQ)
         {
-            weapons[i] = transform.GetChild(i);
+            primaryWeaponEQ = true;
+            ammoPrimaryText.SetActive(true);
+            primaryWeapon.SetActive(true);
+            secondaryWeaponEQ = false;
+            ammoSecondaryText.SetActive(false);
+            secondaryWeapon.SetActive(false);
+            AudioSource.PlayClipAtPoint(switchSound, transform.position, 0.5f);
         }
-        if(keys == null) keys = new KeyCode[weapons.Length];
     }
-
-    private void Select(int weaponIndex)
+    void OnSecondary()
     {
-        for(int i = 0; i < weapons.Length; i++)
+        if (secondaryWeaponFound && !secondaryWeaponEQ)
         {
-            weapons[i].gameObject.SetActive(i == weaponIndex);
+            secondaryWeaponEQ = true;
+            ammoSecondaryText.SetActive(true);
+            secondaryWeapon.SetActive(true);
+            primaryWeaponEQ = false;
+            ammoPrimaryText.SetActive(false);
+            primaryWeapon.SetActive(false);
+            AudioSource.PlayClipAtPoint(switchSound, transform.position, 0.5f);
         }
-        timeSinceLastSwitch = 0f;
-
-        OnWeaponSelected();
-    }
-    private void OnWeaponSelected()
-    {
-        print("New Weapon Selected.");
     }
 
 }

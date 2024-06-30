@@ -5,11 +5,11 @@ using UnityEngine.AI;
 
 public class EnemyAI : MonoBehaviour
 {
+    [Header("Refrences")]
     public NavMeshAgent agent;
-
     public Transform player;
-
     public LayerMask whatIsGround, whatIsPlayer;
+    public float Damage;
 
     //Patroling
     public Vector3 walkPoint;
@@ -79,6 +79,13 @@ public class EnemyAI : MonoBehaviour
     {
         alreadyAttacked = false;
     }
+    private IEnumerator Attacking()
+    {
+        yield return new WaitForSeconds(1f);
+
+        GameManager.Instance.currentHealth -= Damage;
+
+    }
     private void AttackPlayer()
     {
         agent.SetDestination(transform.position);
@@ -87,9 +94,10 @@ public class EnemyAI : MonoBehaviour
 
         if (!alreadyAttacked)
         {
-            //damage player
-
+            Debug.Log("Attacked");
+            StartCoroutine(Attacking());
             alreadyAttacked = true;
+
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
         }
     }
