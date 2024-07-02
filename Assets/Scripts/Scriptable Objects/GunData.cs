@@ -1,35 +1,53 @@
-using System.Collections;
-using System.Collections.Generic;
+/*
+ * Author: Ethan Thuta Lwin
+ * Date of Creation: June 2024
+ * Description: Contains data for a gun, including its name, damage, shooting range, ammo capacity, fire rate, and reloading properties
+ */
+
 using UnityEngine;
-
-
-[CreateAssetMenu(fileName ="Gun", menuName ="Weapon/Gun")]
 public class GunData : ScriptableObject
 {
     [Header("Info")]
-    //name of the gun//
+    /// <summary>
+    /// Name of the gun.
+    /// </summary>
     public new string name;
 
     [Header("Shooting")]
-    //amount of damage gun can do//
+    /// <summary>
+    /// Amount of damage the gun can inflict.
+    /// </summary>
     public float damage;
-    //how far the bullets can travel//
+    /// <summary>
+    /// Maximum distance bullets fired from this gun can travel.
+    /// </summary>
     public float maxDistance;
 
     [Header("Reloading")]
-    //Max ammo of the gun//
+    /// <summary>
+    /// Maximum ammo capacity of the gun.
+    /// </summary>
     public int maxAmmo;
-    //current amount of ammo in the gun//
+    /// <summary>
+    /// Current amount of ammo loaded in the gun.
+    /// </summary>
     public int currentAmmo;
-    //how much ammo the gun can hold//
+    /// <summary>
+    /// Maximum ammo capacity the gun can hold in a magazine.
+    /// </summary>
     public int magSize;
-    //how fast the gun can shoot//
+    /// <summary>
+    /// Rate of fire of the gun (bullets per minute).
+    /// </summary>
     public float fireRate;
-    //how long it takes for the gun to reload//
+    /// <summary>
+    /// Time it takes for the gun to reload.
+    /// </summary>
     public float reloadTime;
-    //if the gun is reloading//
+    /// <summary>
+    /// Flag indicating if the gun is currently reloading.
+    /// </summary>
     [HideInInspector]
     public bool reloading = false;
-
-
 }
+

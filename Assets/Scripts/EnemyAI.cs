@@ -1,31 +1,37 @@
+/*
+ * Author: Ethan Thuta Lwin
+ * Date of Creation: June 2024
+ * Description: Controls the behavior of an enemy AI, including patrolling, chasing, and attacking the player
+ */
+
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyAI : MonoBehaviour
 {
-    [Header("Refrences")]
+    [Header("References")]
     public NavMeshAgent agent;
     public Transform player;
     public LayerMask whatIsGround, whatIsPlayer;
     public float Damage;
+    [SerializeField] AudioSource playerDamange;
 
-    //Patroling
+    // Patroling
     public Vector3 walkPoint;
     bool walkPointSet;
     public float walkPointRange;
 
-    //Attacking
+    // Attacking
     public float timeBetweenAttacks;
     bool alreadyAttacked;
 
-    //States
+    // States
     public float sightRange, attackRange;
     public bool playerInSightRange, playerInAttackRange;
 
     /// <summary>
-    /// in order to automatically set the variables
+    /// Automatically sets references to player and NavMeshAgent on Awake.
     /// </summary>
     private void Awake()
     {
@@ -33,22 +39,26 @@ public class EnemyAI : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
     }
 
-
-
     private void Update()
     {
-        //checking for enemy sight and attack range
+        // Check for enemy sight and attack range
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
 
-        if (!playerInSightRange && !playerInAttackRange) Patroling();
-        if (playerInSightRange && !playerInAttackRange) ChasePlayer();
-        if (playerInSightRange && playerInAttackRange) AttackPlayer();
+        // Determine AI behavior based on player proximity
+        if (!playerInSightRange && !playerInAttackRange)
+            Patroling();
+        if (playerInSightRange && !playerInAttackRange)
+            ChasePlayer();
+        if (playerInSightRange && playerInAttackRange)
+            AttackPlayer();
     }
 
+    /// <summary>
+    /// Search for a random walk point within a specified range.
+    /// </summary>
     private void SearchWalkPoint()
     {
-        //calculate a random point within the range
         float randomZ = Random.Range(-walkPointRange, walkPointRange);
         float randomX = Random.Range(-walkPointRange, walkPointRange);
 
@@ -57,39 +67,59 @@ public class EnemyAI : MonoBehaviour
         if (Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround))
             walkPointSet = true;
     }
+
+    /// <summary>
+    /// Patrols between random walk points.
+    /// </summary>
     private void Patroling()
     {
-        if (!walkPointSet) SearchWalkPoint();
+        if (!walkPointSet)
+            SearchWalkPoint();
 
         if (walkPointSet)
             agent.SetDestination(walkPoint);
+
         Vector3 distanceToWalkPoint = transform.position - walkPoint;
 
-        //reached
         if (distanceToWalkPoint.magnitude < 1f)
             walkPointSet = false;
     }
 
+    /// <summary>
+    /// Chase the player by setting the destination to the player's position.
+    /// </summary>
     private void ChasePlayer()
     {
         agent.SetDestination(player.position);
     }
 
+    /// <summary>
+    /// Reset the attack state after attacking.
+    /// </summary>
     private void ResetAttack()
     {
         alreadyAttacked = false;
     }
+
+    /// <summary>
+    /// Coroutine for attacking the player.
+    /// </summary>
     private IEnumerator Attacking()
     {
         yield return new WaitForSeconds(1f);
 
-        GameManager.Instance.currentHealth -= Damage;
+        playerDamange.Play();
 
+        // Damage the player's health
+        GameManager.Instance.currentHealth -= Damage;
     }
+
+    /// <summary>
+    /// Attack the player when within attack range.
+    /// </summary>
     private void AttackPlayer()
     {
         agent.SetDestination(transform.position);
-
         transform.LookAt(player);
 
         if (!alreadyAttacked)
@@ -102,3 +132,4 @@ public class EnemyAI : MonoBehaviour
         }
     }
 }
+

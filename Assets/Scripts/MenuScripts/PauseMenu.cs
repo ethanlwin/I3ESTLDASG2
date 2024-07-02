@@ -1,18 +1,29 @@
+/*
+ * Author: Ethan Thuta Lwin
+ * Date of Creation: June 2024
+ * Description: Manages the pause menu functionality including pausing, resuming,
+ * and navigating to main menu or quitting the game
+ */
+
+using StarterAssets;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
     /// <summary>
-    /// link to the pause menu
+    /// Reference to the pause menu GameObject.
     /// </summary>
     public GameObject pauseMenu;
+
     /// <summary>
-    /// bool to check if game is paused
+    /// Indicates whether the game is currently paused.
     /// </summary>
     public static bool isPaused = false;
+
     void Start()
     {
         pauseMenu.SetActive(false);
@@ -20,7 +31,7 @@ public class PauseMenu : MonoBehaviour
 
     void Update()
     {
-        
+
     }
 
     void OnPause()
@@ -37,7 +48,7 @@ public class PauseMenu : MonoBehaviour
     }
 
     /// <summary>
-    /// activates the pause menu and freezes the game
+    /// Activates the pause menu and freezes the game.
     /// </summary>
     public void PauseGame()
     {
@@ -45,10 +56,12 @@ public class PauseMenu : MonoBehaviour
         pauseMenu.SetActive(true);
         Time.timeScale = 0f;
         isPaused = true;
+        GameManager.Instance.player.GetComponent<FirstPersonController>().enabled = false;
+        GameManager.Instance.player.GetComponent<PlayerInput>().enabled = false;
     }
 
     /// <summary>
-    /// deactivates the pause menu and unfreezes the game
+    /// Deactivates the pause menu and resumes the game.
     /// </summary>
     public void ResumeGame()
     {
@@ -56,21 +69,36 @@ public class PauseMenu : MonoBehaviour
         pauseMenu.SetActive(false);
         Time.timeScale = 1f;
         isPaused = false;
+        GameManager.Instance.player.GetComponent<FirstPersonController>().enabled = true;
+        GameManager.Instance.player.GetComponent<PlayerInput>().enabled = true;
     }
+
     /// <summary>
-    /// send the player to the main menu
+    /// Sends the player to the main menu.
     /// </summary>
     public void GoToMainMenu()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(0);
+        Destroy(GameManager.Instance.gameObject);
     }
 
     /// <summary>
-    /// quits the game
+    /// Restarts the current level.
+    /// </summary>
+    public void Restart()
+    {
+        Destroy(GameManager.Instance.gameObject);
+        SceneManager.LoadScene(1);
+        Time.timeScale = 1f;
+    }
+
+    /// <summary>
+    /// Quits the application.
     /// </summary>
     public void QuitGame()
     {
         Application.Quit();
     }
 }
+

@@ -18,9 +18,17 @@ EditorBuildSettings:
     path: Assets/Scenes/BuildingResi.unity
     guid: 8abc047a23228d54eaec84fdd5a34b72
   - enabled: 1
+    path: Assets/Scenes/BuildingNonResi.unity
+    guid: f43894e99fb071446965c4e66646654b
+  - enabled: 1
+    path: Assets/Scenes/ConvinientStore.unity
+    guid: 2d810996e6170764298fd241be9ae533
+  - enabled: 1
     path: Assets/Scenes/CraftWarehouse.unity
     guid: 4e17e54d6897b68489daa59007af642a
   - enabled: 1
     path: Assets/Scenes/BossWarehouse.unity
     guid: 742a3b07e569ea446a5a1344c9a66966
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 9e7be553448fa2546aea5752021cbcf7,
+      type: 2}
